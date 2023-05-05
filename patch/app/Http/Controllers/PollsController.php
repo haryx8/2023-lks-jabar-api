@@ -94,27 +94,10 @@ class PollsController extends Controller
                 }
             }
         }else{
-            $polls = Polls::select('polls.*','users.username')
+            $polls = Polls::select('polls.*','users.username',DB::raw("JSON_ARRAY((SELECT JSON_GROUP_OBJECT(c.id,c.choice) FROM choices c WHERE polls.id = c.poll_id)) AS choices"))
                 ->leftJoin('users', 'polls.created_by', '=', 'users.id')->get();
-
-            $choices = Polls::select('polls.id AS poll_id','choices.id','choices.choice')
-            ->rightJoin('choices', 'polls.id', '=', 'choices.poll_id')->get();
-
-            $dpools = json_decode($polls, true);
-            foreach ($polls as $pid => $praw) {
-                $dpools[$pid] = array_merge($dpools[$pid], array("choices" => array()));
-                $dchoices = json_decode($choices, true);
-                $list = array();
-                foreach ($choices as $cid => $craw) {
-                    if ($dpools[$pid]['id'] == $dchoices[$cid]['poll_id']) {
-                        array_push($list, array($dchoices[$cid]['id'] => $dchoices[$cid]['choice']));
-                    }
-                }
-                $dpools[$pid] = array_merge($dpools[$pid], array("choices" => $list));
-            }
-                
             return response()->json([
-                'data' => $dpools,
+                'data' => $polls,
             ]);
         }
     }
