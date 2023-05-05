@@ -8,7 +8,7 @@
 >cd yukpilih
 
 ## Download & Extract database migration files
-Download migration file [Download](https://github.com/haryx8/2023-lks-jabar-api/files/11402879/migrations.tgz)
+[Download](https://github.com/haryx8/2023-lks-jabar-api/files/11402879/migrations.tgz)
 
 >cd database/migration
 
@@ -260,5 +260,5 @@ Route::controller(PollsController::class)->group(function () {
 >php artisan serve --host 0.0.0.0
 
 ## Download Postman Collection
-Download Postman Collection [Download](https://github.com/haryx8/2023-lks-jabar-api/files/11402903/LKS.JABAR.postman_collection.json.zip)
+[Download](https://github.com/haryx8/2023-lks-jabar-api/files/11402903/LKS.JABAR.postman_collection.json.zip)
 
