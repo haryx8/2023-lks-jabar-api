@@ -82,7 +82,9 @@ class PollsController extends Controller
                 return $this->invalid_request();
             }else{
                 // $data = Polls::select('polls.*','users.username',DB::raw("(SELECT JSON_OBJECTAGG(c.id,c.choice) FROM choices c WHERE polls.id = c.poll_id) AS choices"))
-                $data = Polls::select('polls.*','users.username',DB::raw("JSON_ARRAY((SELECT JSON_GROUP_OBJECT(c.id,c.choice) FROM choices c WHERE polls.id = c.poll_id)) AS choices"))
+                $data = Polls::select('polls.*','users.username',
+                DB::raw("(SELECT 0) AS result"),
+                DB::raw("JSON_ARRAY((SELECT JSON_GROUP_OBJECT(c.id,c.choice) FROM choices c WHERE polls.id = c.poll_id)) AS choices"))
                 ->leftJoin('users', 'polls.created_by', '=', 'users.id')
                 ->where('polls.id', request()->segment(3))->get();
                 if ($data->count() > 0) {
@@ -94,7 +96,10 @@ class PollsController extends Controller
                 }
             }
         }else{
-            $polls = Polls::select('polls.*','users.username',DB::raw("JSON_ARRAY((SELECT JSON_GROUP_OBJECT(c.id,c.choice) FROM choices c WHERE polls.id = c.poll_id)) AS choices"))
+            $polls = Polls::select(
+                'polls.*','users.username',
+                DB::raw("(SELECT 0) AS result"),
+                DB::raw("JSON_ARRAY((SELECT JSON_GROUP_OBJECT(c.id,c.choice) FROM choices c WHERE polls.id = c.poll_id)) AS choices"))
                 ->leftJoin('users', 'polls.created_by', '=', 'users.id')->get();
             return response()->json([
                 'data' => $polls,
