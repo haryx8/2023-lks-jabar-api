@@ -81,14 +81,13 @@ class PollsController extends Controller
             if ($validator->fails()) {
                 return $this->invalid_request();
             }else{
-                $raw = Polls::select('polls.*','users.username')
+                // $data = Polls::select('polls.*','users.username',DB::raw("(SELECT JSON_OBJECTAGG(c.id,c.choice) FROM choices c WHERE polls.id = c.poll_id) AS choices"))
+                $data = Polls::select('polls.*','users.username',DB::raw("JSON_ARRAY((SELECT JSON_GROUP_OBJECT(c.id,c.choice) FROM choices c WHERE polls.id = c.poll_id)) AS choices"))
                 ->leftJoin('users', 'polls.created_by', '=', 'users.id')
                 ->where('polls.id', request()->segment(3))->get();
-                if ($raw->count() > 0) {
+                if ($data->count() > 0) {
                     return response()->json([
-                        'data' => Polls::select('polls.*','users.username')
-                        ->leftJoin('users', 'polls.created_by', '=', 'users.id')
-                        ->where('polls.id', request()->segment(3))->get(),
+                        'data' => $data,
                     ]);
                 }else{
                     return $this->invalid_request();
