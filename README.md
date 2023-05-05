@@ -283,3 +283,12 @@ Route::controller(PollsController::class)->group(function () {
 - Delete Poll (Delete) - Admin Only
 - Vote - User Only
 
+## Reference
+- https://laravel.com/docs/10.x/eloquent
+- https://laravel.com/docs/10.x/hashing
+- https://laravel.com/docs/10.x/schema
+- https://laravel.com/docs/10.x/validation
+- https://laravel.com/docs/10.x/queries
+- https://laravel-jwt-auth.readthedocs.io/en/latest/auth-guard/
+- https://blog.logrocket.com/implementing-jwt-authentication-laravel-9/#create-todo-model-controller-migration
+
