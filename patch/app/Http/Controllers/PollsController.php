@@ -20,7 +20,8 @@ class PollsController extends Controller
         $request->validate([
             'title' => 'required|string|min:12|max:255|unique:polls',
             'description' => 'required|string|min:12|max:255',
-            'deadline' => 'date|after:tomorrow',
+            'deadline' => 'required|date|after:tomorrow',
+            'choices' => 'required|json',
         ]);
         if (auth()->user()->role == 1) {
             $data = Polls::create([
@@ -29,15 +30,13 @@ class PollsController extends Controller
                 'deadline' => $request->deadline,
                 'created_by' => auth()->payload()->get('sub'),
             ]);
-
-            DB::table('choices')->insert(
-                array(
-                    ['choice' => 'Windows','poll_id' => $data->id, "created_at" => \Carbon\Carbon::now(), "updated_at" => \Carbon\Carbon::now()],
-                    ['choice' => 'Android','poll_id' => $data->id, "created_at" => \Carbon\Carbon::now(), "updated_at" => \Carbon\Carbon::now()],
-                    ['choice' => 'Linux','poll_id' => $data->id, "created_at" => \Carbon\Carbon::now(), "updated_at" => \Carbon\Carbon::now()],
-                    ['choice' => 'BSD','poll_id' => $data->id, "created_at" => \Carbon\Carbon::now(), "updated_at" => \Carbon\Carbon::now()],
-                )
-            );
+            
+            $choices = json_decode($request->choices, true);
+            $list = array();
+            foreach ($choices as $key => $val) {
+                $list = array_merge($list, array(['choice' => $val,'poll_id' => $data->id, "created_at" => \Carbon\Carbon::now(), "updated_at" => \Carbon\Carbon::now()]));
+            }
+            DB::table('choices')->insert($list);
             return $this->success_request();
         }else{
             return $this->unauthorized_request();
@@ -98,6 +97,7 @@ class PollsController extends Controller
         }else{
             $polls = Polls::select('polls.*','users.username')
                 ->leftJoin('users', 'polls.created_by', '=', 'users.id')->get();
+
             $choices = Polls::select('polls.id AS poll_id','choices.id','choices.choice')
             ->rightJoin('choices', 'polls.id', '=', 'choices.poll_id')->get();
 
