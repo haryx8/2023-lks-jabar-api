@@ -262,3 +262,24 @@ Route::controller(PollsController::class)->group(function () {
 ## Download Postman Collection
 [Download](https://github.com/haryx8/2023-lks-jabar-api/files/11402903/LKS.JABAR.postman_collection.json.zip)
 
+## API Testing
+
+### Request Header Configuration
+- Accept: application/json
+- Authorization: Bearer {{bearer}}
+
+### Flow Auth
+- Register
+- Login
+- Me
+- Refresh
+- Logout
+- Reset Password
+
+### Flow Poll
+- Create Poll (POST) - Admin Only
+- Get All Poll (GET)
+- Get One Poll (GET)
+- Delete Poll (Delete) - Admin Only
+- Vote - User Only
+
