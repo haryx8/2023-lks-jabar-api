@@ -40,7 +40,7 @@ DB_PASSWORD=
 
 >vi config/auth.php
 
-```
+```php
 'defaults' => [
     'guard' => 'api',
     'passwords' => 'users',
@@ -63,7 +63,7 @@ DB_PASSWORD=
 
 >vi app/Models/User.php
 
-```
+```php
 <?php
 namespace App\Models;
 
@@ -119,7 +119,7 @@ class User extends Authenticatable implements JWTSubject
 
 >vi app/Http/Controllers/AuthController.php
 
-```
+```php
 <?php
 
 namespace App\Http\Controllers;
@@ -229,7 +229,7 @@ class AuthController extends Controller
 
 >vi routes/api.php
 
-```
+```php
 <?php
 
 use Illuminate\Support\Facades\Route;
